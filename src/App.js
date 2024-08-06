@@ -8,6 +8,7 @@ function App() {
       <Header />
 
       <div className="grid grid-cols-3 gap-8 p-8">
+        {/* Enter a City Name */}
         <div className="col-span-1">
           <span className="font-medium">Enter a City Name</span>
           <input
@@ -29,7 +30,28 @@ function App() {
           </button>
         </div>
 
-        <div className="col-span-2 h-24 bg-slate-500"> </div>
+        {/* Display Weather Information */}
+        <div className="col-span-2">
+          {/* Current Weather Information */}
+          <div className="bg-blue-500 rounded-md flex justify-between p-5">
+            <div className="flex flex-col">
+              <span class="text-white text-xl font-medium">London (2023-06-19)</span>
+              <span class="text-white">Temperature: 18.71 °C</span>
+              <span class="text-white">Wind: 4.31 M/S</span>
+              <span class="text-white">Humidity: 76%</span>
+            </div>
+            <div>
+              <img
+                src="http://openweathermap.org/img/wn/04d.png"
+                alt="Weather Icon"
+              />
+              <span class="text-white">Cloudy</span>
+            </div>
+          </div>
+
+          {/* Weather Forecast */}
+          <div></div>
+        </div>
       </div>
     </div>
   );
