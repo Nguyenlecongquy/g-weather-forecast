@@ -1,6 +1,7 @@
 import "./App.css";
 import React from "react";
 import Header from "./components/header/Header";
+import WeatherForecast from "./components/weatherForecast/WeatherForecast";
 
 function App() {
   return (
@@ -33,9 +34,11 @@ function App() {
         {/* Display Weather Information */}
         <div className="col-span-2">
           {/* Current Weather Information */}
-          <div className="bg-blue-500 rounded-md flex justify-between p-5">
+          <div className="bg-blue-500 rounded-md flex justify-between p-5 mb-5">
             <div className="flex flex-col">
-              <span class="text-white text-xl font-medium">London (2023-06-19)</span>
+              <span class="text-white text-xl font-medium">
+                London (2023-06-19)
+              </span>
               <span class="text-white">Temperature: 18.71 °C</span>
               <span class="text-white">Wind: 4.31 M/S</span>
               <span class="text-white">Humidity: 76%</span>
@@ -50,7 +53,15 @@ function App() {
           </div>
 
           {/* Weather Forecast */}
-          <div></div>
+          <div className="">
+            <span class="font-bold text-xl">4-Day Forecast</span>
+            <div className="flex w-full flex-wrap gap-3">
+              <WeatherForecast />
+              <WeatherForecast />
+              <WeatherForecast />
+              <WeatherForecast />
+            </div>
+          </div>
         </div>
       </div>
     </div>
