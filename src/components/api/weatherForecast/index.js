@@ -2,7 +2,7 @@ import instance from "../../axios";
 
 const getWeatherForecast = async (city, dayForecast) => {
   try {
-    const response = await instance.get(`/weather-forecast`, {
+    const response = await instance.get(`/weather-forecast/search`, {
       params: {
         city: city,
         days: dayForecast,
