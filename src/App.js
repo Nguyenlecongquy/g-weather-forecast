@@ -10,17 +10,14 @@ function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [isloading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [dayForecast, setDayForecast] = useState(5);
 
-  const fetchWeatherData = async () => {
-    const response = await getWeatherForecast(city);
-    console.log(response);
-    console.log(response.message);
+  const fetchWeatherData = async (days) => {
+    const response = await getWeatherForecast(city, days);
     if (response.message === "No matching location found.") {
       setError(true);
       return;
     } else {
-      const a = response.forecast.forecastday.slice(1, 4);
-      console.log("adds", a);
       setError(false);
       setWeatherData(response);
     }
@@ -28,7 +25,7 @@ function App() {
 
   useEffect(() => {
     if (weatherData === null) {
-      fetchWeatherData();
+      fetchWeatherData(dayForecast);
     } else if (weatherData.message === "No matching location found.") {
       setIsLoading(false);
       console.log(weatherData.error);
@@ -36,10 +33,18 @@ function App() {
       setIsLoading(false);
       console.log(weatherData);
     }
-  }, [weatherData]);
+  }, [weatherData, dayForecast]);
 
   const onSearch = () => {
-    fetchWeatherData();
+    fetchWeatherData(dayForecast);
+  };
+
+  const onLoadMore = () => {
+    if (dayForecast + 4 > 14) {
+      return;
+    }
+    setDayForecast(dayForecast + 4);
+    fetchWeatherData(dayForecast + 4);
   };
 
   return (
@@ -126,6 +131,15 @@ function App() {
                       <WeatherForecast data={data} />
                     ))}
                 </div>
+                {/* Load More Button */}
+                {dayForecast < 13 && (
+                  <button
+                    className="w-36 p-2 bg-blue-500 text-white rounded-md mt-5"
+                    onClick={onLoadMore}
+                  >
+                    Load more
+                  </button>
+                )}
               </div>
             </div>
           </div>
