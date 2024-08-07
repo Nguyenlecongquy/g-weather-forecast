@@ -11,16 +11,21 @@ function App() {
   const [isloading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [dayForecast, setDayForecast] = useState(5);
+  const [isLoadMore, setIsLoadMore] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
   const fetchWeatherData = async (days) => {
     const response = await getWeatherForecast(city, days);
     if (response.message === "No matching location found.") {
       setError(true);
+      setIsSearch(false);
       return;
     } else {
       setError(false);
       setWeatherData(response);
     }
+    setIsLoadMore(false);
+    setIsSearch(false);
   };
 
   useEffect(() => {
@@ -28,7 +33,6 @@ function App() {
       fetchWeatherData(dayForecast);
     } else if (weatherData.message === "No matching location found.") {
       setIsLoading(false);
-      console.log(weatherData.error);
     } else {
       setIsLoading(false);
       console.log(weatherData);
@@ -36,15 +40,18 @@ function App() {
   }, [weatherData, dayForecast]);
 
   const onSearch = () => {
-    fetchWeatherData(dayForecast);
+    setIsSearch(true);
+    setDayForecast(5);
+    fetchWeatherData(5);
   };
 
   const onLoadMore = () => {
+    setIsLoadMore(true);
     if (dayForecast + 4 > 14) {
       return;
     }
-    setDayForecast(dayForecast + 4);
     fetchWeatherData(dayForecast + 4);
+    setDayForecast(dayForecast + 4);
   };
 
   return (
@@ -73,7 +80,18 @@ function App() {
                 className="w-full mt-4 p-2 bg-blue-500 text-white rounded-md"
                 onClick={onSearch}
               >
+                <div className="flex justify-center">
                 Search
+                {isSearch && (
+                  <img
+                    src="https://i.gifer.com/ZKZg.gif"
+                    alt="loading"
+                    width={18}
+                    className="ml-2"
+                  />
+                )}
+                </div>
+                
               </button>
               <div class="relative inline-flex items-center justify-center w-full">
                 <hr class="w-64 h-[1px] my-8 bg-slate-500 border-0" />
@@ -119,10 +137,18 @@ function App() {
 
               {/* Weather Forecast */}
               <div className="">
-                <div className="mb-2">
+                <div className="flex mb-2">
                   <span class="font-bold text-xl">
                     {weatherData.forecast.forecastday.length - 1}-Day Forecast
                   </span>
+                  {isLoadMore && (
+                    <img
+                      src="https://i.gifer.com/ZKZg.gif"
+                      alt="loading"
+                      width={20}
+                      className="ml-2"
+                    />
+                  )}
                 </div>
                 <div className="flex w-full flex-wrap gap-3">
                   {weatherData.forecast.forecastday
@@ -134,10 +160,20 @@ function App() {
                 {/* Load More Button */}
                 {dayForecast < 13 && (
                   <button
-                    className="w-36 p-2 bg-blue-500 text-white rounded-md mt-5"
+                    className="w-fit p-2 bg-blue-500 text-white rounded-md mt-5"
                     onClick={onLoadMore}
                   >
-                    Load more
+                    <div className="flex">
+                      Load More
+                      {isLoadMore && (
+                        <img
+                          src="https://i.gifer.com/ZKZg.gif"
+                          alt="loading"
+                          width={18}
+                          className="ml-2"
+                        />
+                      )}
+                    </div>
                   </button>
                 )}
               </div>
