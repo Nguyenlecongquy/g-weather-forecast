@@ -17,9 +17,11 @@ function App() {
 
   const fetchWeatherData = async (cityInfor, days) => {
     const response = await getWeatherForecast(cityInfor, days);
-    if (response.message !== undefined) { // response is an error information
+    if (response.message !== undefined) {
+      // response is an error information
       setError(true);
-    } else { // response is the weather data
+    } else {
+      // response is the weather data
       setError(false);
       setWeatherData(response);
     }
@@ -58,12 +60,17 @@ function App() {
   const onGetLocation = () => {
     setIsGetLocation(true);
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        const cityInfor = `${lat},${lon}`;
-        fetchWeatherData(cityInfor, 5);
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const cityInfor = `${lat},${lon}`;
+          fetchWeatherData(cityInfor, 5);
+        },
+        () => {
+          setIsGetLocation(false);
+        }
+      );
     } else {
       alert("Geolocation is not supported by this browser.");
     }
