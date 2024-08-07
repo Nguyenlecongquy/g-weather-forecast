@@ -8,41 +8,42 @@ import Loading from "./components/loading/Loading";
 function App() {
   const [city, setCity] = useState("London");
   const [weatherData, setWeatherData] = useState(null);
-  const [isloading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const [dayForecast, setDayForecast] = useState(5);
   const [isLoadMore, setIsLoadMore] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
+  const [isGetLocation, setIsGetLocation] = useState(false);
 
-  const fetchWeatherData = async (days) => {
-    const response = await getWeatherForecast(city, days);
-    if (response.message === "No matching location found.") {
+  const fetchWeatherData = async (cityInfor, days) => {
+    const response = await getWeatherForecast(cityInfor, days);
+    if (response.message !== undefined) { // response is an error information
       setError(true);
-      setIsSearch(false);
-      return;
-    } else {
+    } else { // response is the weather data
       setError(false);
       setWeatherData(response);
     }
     setIsLoadMore(false);
     setIsSearch(false);
+    setIsGetLocation(false);
   };
 
   useEffect(() => {
     if (weatherData === null) {
-      fetchWeatherData(dayForecast);
-    } else if (weatherData.message === "No matching location found.") {
-      setIsLoading(false);
+      fetchWeatherData(city, dayForecast);
     } else {
       setIsLoading(false);
-      console.log(weatherData);
     }
-  }, [weatherData, dayForecast]);
+  }, [weatherData, dayForecast, city]);
 
   const onSearch = () => {
+    if (city === "") {
+      setError(true);
+      return;
+    }
     setIsSearch(true);
     setDayForecast(5);
-    fetchWeatherData(5);
+    fetchWeatherData(city, 5);
   };
 
   const onLoadMore = () => {
@@ -50,13 +51,27 @@ function App() {
     if (dayForecast + 4 > 14) {
       return;
     }
-    fetchWeatherData(dayForecast + 4);
+    fetchWeatherData(city, dayForecast + 4);
     setDayForecast(dayForecast + 4);
+  };
+
+  const onGetLocation = () => {
+    setIsGetLocation(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const cityInfor = `${lat},${lon}`;
+        fetchWeatherData(cityInfor, 5);
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   };
 
   return (
     <div className="App">
-      {isloading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <div>
@@ -74,24 +89,23 @@ function App() {
                 onChange={(e) => setCity(e.target.value)}
               />
               <span className="text-red-500">
-                {error ? "City not found" : ""}
+                {error ? "Please check City Name" : ""}
               </span>
               <button
                 className="w-full mt-4 p-2 bg-blue-500 text-white rounded-md"
                 onClick={onSearch}
               >
                 <div className="flex justify-center">
-                Search
-                {isSearch && (
-                  <img
-                    src="https://i.gifer.com/ZKZg.gif"
-                    alt="loading"
-                    width={18}
-                    className="ml-2"
-                  />
-                )}
+                  Search
+                  {isSearch && (
+                    <img
+                      src="https://i.gifer.com/ZKZg.gif"
+                      alt="loading"
+                      width={18}
+                      className="ml-2"
+                    />
+                  )}
                 </div>
-                
               </button>
               <div class="relative inline-flex items-center justify-center w-full">
                 <hr class="w-64 h-[1px] my-8 bg-slate-500 border-0" />
@@ -99,8 +113,21 @@ function App() {
                   or
                 </span>
               </div>
-              <button className="w-full p-2 bg-slate-500 text-white rounded-md">
-                Use Current Location
+              <button
+                className="w-full p-2 bg-slate-500 text-white rounded-md"
+                onClick={onGetLocation}
+              >
+                <div className="flex justify-center">
+                  Use Current Location
+                  {isGetLocation && (
+                    <img
+                      src="https://i.gifer.com/ZKZg.gif"
+                      alt="loading"
+                      width={18}
+                      className="ml-2"
+                    />
+                  )}
+                </div>
               </button>
             </div>
 
@@ -153,7 +180,7 @@ function App() {
                 <div className="flex w-full flex-wrap gap-3">
                   {weatherData.forecast.forecastday
                     .slice(1, weatherData.forecast.forecastday.length)
-                    .map((data, index) => (
+                    .map((data) => (
                       <WeatherForecast data={data} />
                     ))}
                 </div>

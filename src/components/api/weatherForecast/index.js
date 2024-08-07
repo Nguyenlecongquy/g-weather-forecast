@@ -8,7 +8,6 @@ const getWeatherForecast = async (city, dayForecast) => {
         days: dayForecast,
       },
     });
-    console.log("response", response.data);
     return response.data;
   } catch (error) {
     return error.response.data;
