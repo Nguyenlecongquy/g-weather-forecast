@@ -22,9 +22,7 @@ function App() {
   const [messageError, setMessageError] = useState(""); // Error message Register and Unsubscribe
 
   const fetchWeatherData = async (cityInfor, days) => {
-    console.log("run this 2");
     const response = await getWeatherForecast(cityInfor, days);
-    console.log("response", response);
     if (response.message !== undefined) {
       // response is an error information
       setError(true);
@@ -79,7 +77,8 @@ function App() {
     if (dayForecast + 4 > 14) {
       return;
     }
-    fetchWeatherData(city, dayForecast + 4);
+    const cityName = weatherData.location.name;
+    fetchWeatherData(cityName, dayForecast + 4);
     setDayForecast(dayForecast + 4);
   };
 
