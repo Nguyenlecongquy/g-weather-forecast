@@ -7,7 +7,7 @@ import weatherForecastSkeleton from "./components/skeletonLoading/weatherForecas
 import { registerEmail, unsubscribeEmail } from "./components/api/receiveEmail";
 
 function App() {
-  const [city, setCity] = useState("London");
+  const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -38,9 +38,31 @@ function App() {
 
   useEffect(() => {
     if (weatherData === null) {
-      fetchWeatherData(city, dayForecast);
+      const data = JSON.parse(localStorage.getItem("weatherData"));
+      if (data !== null) {
+        const date_now = new Date();
+        if (
+          new Date(data.forecast.forecastday[0].date).toDateString() ===
+          date_now.toDateString()
+        ) {
+          setWeatherData(data);
+          setCity(data.location.name);
+          setIsLoading(false);
+        }
+        else {
+          fetchWeatherData("London", dayForecast);
+          setIsLoading(false);
+        }
+      } else {
+        fetchWeatherData("London", dayForecast);
+        setIsLoading(false);
+      }
     } else {
       setIsLoading(false);
+    }
+
+    if (weatherData !== null && weatherData.message === undefined) {
+      localStorage.setItem("weatherData", JSON.stringify(weatherData));
     }
   }, [weatherData, dayForecast, city]);
 
