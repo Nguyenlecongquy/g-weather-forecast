@@ -22,7 +22,9 @@ function App() {
   const [messageError, setMessageError] = useState(""); // Error message Register and Unsubscribe
 
   const fetchWeatherData = async (cityInfor, days) => {
+    console.log("run this 2");
     const response = await getWeatherForecast(cityInfor, days);
+    console.log("response", response);
     if (response.message !== undefined) {
       // response is an error information
       setError(true);
@@ -39,23 +41,18 @@ function App() {
   useEffect(() => {
     if (weatherData === null) {
       const data = JSON.parse(localStorage.getItem("weatherData"));
-      if (data !== null) {
+      if (data === null) {
+        fetchWeatherData("London", dayForecast);
+      } else {
         const date_now = new Date();
         if (
           new Date(data.forecast.forecastday[0].date).toDateString() ===
           date_now.toDateString()
         ) {
           setWeatherData(data);
-          setCity(data.location.name);
-          setIsLoading(false);
-        }
-        else {
+        } else {
           fetchWeatherData("London", dayForecast);
-          setIsLoading(false);
         }
-      } else {
-        fetchWeatherData("London", dayForecast);
-        setIsLoading(false);
       }
     } else {
       setIsLoading(false);
