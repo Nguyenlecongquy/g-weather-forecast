@@ -49,6 +49,7 @@ function App() {
         ) {
           setWeatherData(data);
           setCity(data.location.name);
+          setDayForecast(data.forecast.forecastday.length);
         } else {
           fetchWeatherData("London", dayForecast);
         }
