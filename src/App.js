@@ -4,6 +4,7 @@ import WeatherForecast from "./components/weatherForecast/WeatherForecast";
 import { getWeatherForecast } from "./components/api/weatherForecast";
 import weatherPresentSkeleton from "./components/skeletonLoading/weatherPresentSkeleton";
 import weatherForecastSkeleton from "./components/skeletonLoading/weatherForecastSkeleton";
+import { registerEmail, unsubscribeEmail } from "./components/api/receiveEmail";
 
 function App() {
   const [city, setCity] = useState("London");
@@ -14,6 +15,11 @@ function App() {
   const [isLoadMore, setIsLoadMore] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [isGetLocation, setIsGetLocation] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+  const [isUnsubscribe, setIsUnsubscribe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [cityRegister, setCityRegister] = useState("");
+  const [messageError, setMessageError] = useState(""); // Error message Register and Unsubscribe
 
   const fetchWeatherData = async (cityInfor, days) => {
     const response = await getWeatherForecast(cityInfor, days);
@@ -76,18 +82,67 @@ function App() {
     }
   };
 
+  const onRegister = async () => {
+    setIsRegister(true);
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (cityRegister === "") {
+      setMessageError("City Name is required");
+      setIsRegister(false);
+      return;
+    }
+    if (email === "") {
+      setMessageError("Email is required");
+      setIsRegister(false);
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setMessageError("Email is invalid");
+      setIsRegister(false);
+      return;
+    }
+    const checkCity = await getWeatherForecast(cityRegister, 5);
+    if (checkCity.message !== undefined) {
+      setMessageError("Please check City Name");
+      setIsRegister(false);
+      return;
+    }
+    const data = await registerEmail(email, cityRegister);
+    alert(data.message);
+    setMessageError("");
+    setIsRegister(false);
+  };
+
+  const onUnsubscribe = async () => {
+    setIsUnsubscribe(true);
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (email === "") {
+      setMessageError("Email is required");
+      setIsUnsubscribe(false);
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setMessageError("Email is invalid");
+      setIsUnsubscribe(false);
+      return;
+    }
+    const data = await unsubscribeEmail(email);
+    alert(data.message);
+    setMessageError("");
+    setIsUnsubscribe(false);
+  };
+
   return (
     <div>
       <Header />
 
       <div className="grid grid-cols-3 gap-8 p-8">
-        {/* Enter a City Name */}
         <div className="col-span-1">
+          {/* Enter a City Name */}
           <span className="font-medium">Enter a City Name</span>
           <input
             type="text"
             className="w-full mt-2 p-2 border border-gray-300 rounded-md"
-            placeholder="E.g., New York, London, Tokyo"
+            placeholder="E.g. New York, London, Tokyo"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
@@ -118,7 +173,7 @@ function App() {
             </span>
           </div>
           <button
-            className="w-full p-2 bg-slate-500 text-white rounded-md"
+            className="w-full p-2 bg-slate-500 text-white rounded-md mb-8"
             onClick={onGetLocation}
             disabled={isLoading}
           >
@@ -134,6 +189,71 @@ function App() {
               )}
             </div>
           </button>
+
+          {/* Fill email */}
+          <div>
+            <span className="font-medium">
+              Do you want to receive daily weather forecast information via
+              email address?
+            </span>
+          </div>
+          <div>
+            <span className="font-medium">Your city</span>
+          </div>
+          <input
+            type="text"
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+            placeholder="E.g. New York, London, Tokyo"
+            value={cityRegister}
+            onChange={(e) => setCityRegister(e.target.value)}
+          />
+          <div>
+            <span className="font-medium">Your email</span>
+          </div>
+          <input
+            type="email"
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+            placeholder="E.g. john@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <span className="text-red-500">{messageError}</span>
+          <div className="flex flex-row justify-around">
+            <button
+              className="w-32 mt-4 p-2 bg-blue-500 text-white rounded-md"
+              disabled={isLoading}
+              onClick={onRegister}
+            >
+              <div className="flex justify-center">
+                Register
+                {isRegister && (
+                  <img
+                    src="https://i.gifer.com/ZKZg.gif"
+                    alt="loading"
+                    width={18}
+                    className="ml-2"
+                  />
+                )}
+              </div>
+            </button>
+            <button
+              className="w-32 mt-4 p-2 bg-red-500 text-white rounded-md"
+              disabled={isLoading}
+              onClick={onUnsubscribe}
+            >
+              <div className="flex justify-center">
+                Unsubscribe
+                {isUnsubscribe && (
+                  <img
+                    src="https://i.gifer.com/ZKZg.gif"
+                    alt="loading"
+                    width={18}
+                    className="ml-2"
+                  />
+                )}
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Display Weather Information */}

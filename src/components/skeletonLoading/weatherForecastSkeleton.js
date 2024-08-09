@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import cardWeatherSkeleton from "./cardWeatherSkeleton";
 
@@ -17,7 +17,10 @@ const weatherForecastSkeleton = () => {
         {cardWeatherSkeleton()}
         {cardWeatherSkeleton()}
       </div>
-      <button className="w-fit p-2 bg-blue-500 text-white rounded-md mt-5">
+      <button
+        className="w-fit p-2 bg-blue-500 text-white rounded-md mt-5"
+        disabled
+      >
         Load more
       </button>
     </div>
