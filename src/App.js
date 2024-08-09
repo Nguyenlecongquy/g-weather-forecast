@@ -92,6 +92,7 @@ function App() {
           const lon = position.coords.longitude;
           const cityInfor = `${lat},${lon}`;
           fetchWeatherData(cityInfor, 5);
+          setDayForecast(5);
         },
         () => {
           setIsGetLocation(false);
