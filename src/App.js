@@ -213,7 +213,7 @@ function App() {
           {/* Fill email */}
           <div>
             <span className="font-medium">
-              Do you want to receive daily weather forecast information via
+              Do you want to receive daily weather information via
               email address?
             </span>
           </div>
