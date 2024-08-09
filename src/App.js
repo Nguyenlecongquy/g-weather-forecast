@@ -50,6 +50,7 @@ function App() {
           date_now.toDateString()
         ) {
           setWeatherData(data);
+          setCity(data.location.name);
         } else {
           fetchWeatherData("London", dayForecast);
         }
