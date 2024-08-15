@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./App.css";
 import Header from "./components/header/Header";
 import WeatherForecast from "./components/weatherForecast/WeatherForecast";
 import { getWeatherForecast } from "./components/api/weatherForecast";
@@ -153,11 +154,11 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App">
       <Header />
 
-      <div className="grid grid-cols-3 gap-8 p-8">
-        <div className="col-span-1">
+      <div className="dashboard">
+        <div className="city">
           {/* Enter a City Name */}
           <span className="font-medium">Enter a City Name</span>
           <input
@@ -241,7 +242,7 @@ function App() {
           <span className="text-red-500">{messageError}</span>
           <div className="flex flex-row justify-around">
             <button
-              className="w-32 mt-4 p-2 bg-blue-500 text-white rounded-md"
+              className="w-[100px] mt-4 p-2 bg-blue-500 text-white rounded-md"
               disabled={isLoading}
               onClick={onRegister}
             >
@@ -258,7 +259,7 @@ function App() {
               </div>
             </button>
             <button
-              className="w-32 mt-4 p-2 bg-red-500 text-white rounded-md"
+              className="w-[100px] mt-4 p-2 bg-red-500 text-white rounded-md"
               disabled={isLoading}
               onClick={onUnsubscribe}
             >
@@ -278,7 +279,7 @@ function App() {
         </div>
 
         {/* Display Weather Information */}
-        <div className="col-span-2">
+        <div className="weather">
           {/* Current Weather Information */}
           {isLoading ? (
             weatherPresentSkeleton()

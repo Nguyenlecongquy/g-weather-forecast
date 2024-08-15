@@ -1,0 +1,53 @@
+@media screen and (min-width: 921px) {
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem; /* 32px */
+    padding: 2rem; /* 32px */
+  }
+  .city {
+    grid-column: span 1 / span 1;
+  }
+  .weather {
+    grid-column: span 2 / span 2;
+  }
+  .textDashboard {
+    font-size: 1.875rem;
+    line-height: 0.25rem;
+  }
+  .weatherCard {
+    width: fit-content;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2rem; /* 32px */
+    padding: 0.7rem;
+  }
+  .textDashboard {
+    font-size: 1.25rem;
+    line-height: 0.25rem;
+  }
+  .weatherCard {
+    width: calc(50% - 0.75rem);
+  }
+}
+
+@media screen and (min-width: 651px) and (max-width: 920px) {
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 2rem; /* 32px */
+    padding: 0.7rem;
+  }
+  .textDashboard {
+    font-size: 1.25rem;
+    line-height: 0.25rem;
+  }
+  .weatherCard {
+    width: calc(33.333% - 12px);
+  }
+}

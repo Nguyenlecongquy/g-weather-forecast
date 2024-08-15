@@ -1,4 +1,5 @@
 import React from "react";
+import "../../App.css"
 
 function WeatherForecast(props) {
   const data = props.data;
@@ -9,7 +10,7 @@ function WeatherForecast(props) {
   wind = wind / data.hour.length;
 
   return (
-    <div className="flex flex-col bg-slate-500 w-40 rounded-md p-3">
+    <div className="flex flex-col bg-slate-500 weatherCard rounded-md p-3">
       <span class="font-bold text-base text-white">({data.date})</span>
       <img
         src={data.day.condition.icon}
