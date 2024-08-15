@@ -39,14 +39,12 @@ function App() {
   useEffect(() => {
     if (weatherData === null) {
       const data = JSON.parse(localStorage.getItem("weatherData"));
+      const date = JSON.parse(localStorage.getItem("date"));
       if (data === null) {
         fetchWeatherData("London", dayForecast);
       } else {
         const date_now = new Date();
-        if (
-          new Date(data.forecast.forecastday[0].date).toDateString() ===
-          date_now.toDateString()
-        ) {
+        if (date === date_now.toDateString()) {
           setWeatherData(data);
           setCity(data.location.name);
           setDayForecast(data.forecast.forecastday.length);
@@ -60,6 +58,8 @@ function App() {
 
     if (weatherData !== null && weatherData.message === undefined) {
       localStorage.setItem("weatherData", JSON.stringify(weatherData));
+      let date = new Date();
+      localStorage.setItem("date", JSON.stringify(date.toDateString()));
     }
   }, [weatherData, dayForecast, city]);
 
@@ -214,8 +214,8 @@ function App() {
           {/* Fill email */}
           <div>
             <span className="font-medium">
-              Do you want to receive daily weather information via
-              email address?
+              Do you want to receive daily weather information via email
+              address?
             </span>
           </div>
           <div>
